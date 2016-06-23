@@ -1,0 +1,318 @@
+﻿MMCC is a project to realize a simple subset c compiler.s
+It mainly include preprocessing(pp),scanning,parsing,semantic,intermediate code(icgen) parts.
+
+The subset c have such features before:
+(each module depends on different criterions
+ the next module may not realize all defined above)
+
+Now I realize the scanning,parsing,semetic analyze and intermediate code generate.
+
+
+1.words
+(The "%%" mains don't consider now,others undefined)
+(1)keywords:
+int,long,float,double,char
+void,const
+%%(array),struct
+%%(pointer)
+if,else,do,while,for,goto
+break,continue,return
+(2)operator:
++ - ++ -- * / %
+> < >= <= == != =
+&& || !  | & ~
+(+= -= is not allowed)
+(3)boundary:
+( ) { } [ ] ' " ; ,
+(4)
+const_i: 0332,0x223,0X332,3324
+const_c: 'D',
+const_s: "SASDF",
+const_f: 0.332,3332.3234 
+(.332 00022 forbiden )
+
+2.syntex
+
+attentions(the sub c set):
+1)The syntax analyze doesn't realize all the words resolved above.
+	a.keywords include only 
+		int,float,if,else,while,break,continue,return
+		(that mains no struct,const type,for,do...while,void,#)
+	b.operator 
+		+ - * / > < >= <= != =
+	c.no char or string
+2)The declearation of the variable can't be assigned 
+  int a;
+  int aa[2];
+  int b[2][6];
+  int a=3;//error
+3)No global variables
+4)No include,declearations,macros,typedef,define
+5)No *(pointer) or &(get address) types
+6)No lable or goto
+7)The defined variable will be effect in the whole function 
+
+
+(1)
+assign,
+expression,(+-*/only)
+if else (== > < >= <=)
+while
+%do while
+%for,
+%goto lable
+
+(2)Grammer:
+ 
+terminators:
+TKN_INT        int
+TKN_FLOAT	   float
+TKN_ID         IDENTIFIER
+TKN_CONSTF     CONST_F
+TKN_CONSTI     CONST_I
+TKN_RET        return
+TKN_IF         if
+TKN_ELSE       else
+TKN_WHILE      while
+TKN_BREAK      break
+TKN_CONTINUE   continue
+TKN_LP         (
+TKN_RP         )
+TKN_LB         {
+TKN_RB         }
+TKN_LB2        [
+TKN_RB2        ]
+TKN_COMMA      ,
+TKN_SEMI       ;
+TKN_ASIGN      =
+TKN_ADD        +
+TKN_SUB        -
+TKN_MUL        *
+TKN_DIV        /
+TKN_EQU        ==
+TKN_NEQU       !=
+TKN_G		   >
+TKN_L          <
+TKN_GE         >=
+TKN_LE         <=
+TKN_END        #
+TKN_EMPTY      $
+$
+(not consider of char or string)
+
+non-terminators :
+PROGRAM
+FUNCTIONS
+FUNCTION
+FLIST          function list
+ARGS_DECL    args declear
+ARGS_NDECL   args next declear
+FUNC_BODY
+STMTS
+STMT           syntex sentence
+EXPR_STMT      expression sentence
+DEF_STMT       defination
+IF_STMT        if sentence
+RET_STMT
+CODE_BLOAK     {} | ;
+ELSE_STMT      else sentence
+WHILE_STMT     while
+WHILE_BODY     break,continue included while
+WHILE_BLOAK
+EXPR           expression
+ETERM          expression terminator
+FA_ARGS        function or array args
+ARGS_REF
+ARGS_NREF    
+ARRAY_REF
+ARRAY_NREF     array reference next demention
+ETLIST1        expression terminator list optp1
+ETLIST1_C      ETLIST1 closure
+ETLIST2        expression terminator list optp2
+ETLSIT2_C	   ETLIST2 closure
+ETLIST3        expression terminator list optp3
+ETLSIT3_C      ETLIST3 closure
+ETLIST4        expression terminator list optp4
+ETLSIT4_C      ETLIST4 closure
+DEF            defination
+DTERM          defination terminator
+DTLIST         defination terminator list
+ARRAY_DECL
+ARRAY_NDEM     array declear next demention
+TYPE
+CONST
+BRE_CONTI      break or continue 
+OPTP1          =
+OPTP2          == > < >= <= != (p=priority)
+OPTP3          + -
+OPTP4          * /
+
+(all the non-terminators must be appeared in left)
+
+grammer production :
+PROGRAM       -> FUNCTIONS
+FUNCTIONS     -> FUNCTION·FLIST
+FLIST         -> FUNCTION·FLIST | $
+FUNCTION      -> TYPE·TKN_ID·TKN_LP·ARGS_DECL·TKN_RP·FUNC_BODY
+ARGS_DECL     -> TYPE·TKN_ID·ARGS_NDECL | $
+ARGS_NDECL    -> TKN_COMMA·TYPE·TKN_ID·ARGS_NDECL | $
+FUNC_BODY     -> TKN_LB·STMTS·TKN_RB
+STMTS         -> STMT·STMTS | $
+STMT          -> EXPR_STMT | DEF_STMT | IF_STMT | WHILE_STMT | RET_STMT
+RET_STMT      -> TKN_RET·EXPR_STMT 
+EXPR_STMT     -> EXPR·TKN_SEMI
+EXPR          -> ETLIST1  
+ETLIST1       -> ETLIST2·ETLIST1_C
+ETLIST1_C     -> OPTP1·ETLIST2·ETLIST1_C | $ 
+ETLIST2       -> ETLIST3·ETLIST3_C 
+ETLIST2_C     -> OPTP2·ETLIST3·ETLIST2_C | $
+ETLIST3       -> ETLIST4·ETLIST3_C
+ETLIST3_C     -> OPTP3·ETLIST4·ETLIST3_C | $
+ETLIST4       -> ETERM·ETLIST4_C
+ETLIST4_C     -> OPTP4·ETERM·ETLIST4_C | $
+ETERM         -> TKN_ID·FA_ARGS | CONST | TKN_LP·EXPR·TKN_RP
+FA_ARGS       -> TKN_LP·ARGS_REF·TKN_RP | ARRAY_REF | $
+ARGS_REF      -> EXPR·ARGS_NREF| $
+ARGS_NREF     -> TKN_COMMA·EXPR·ARGS_NREF | $
+ARRAY_REF     -> TKN_LB2·EXPR·TKN_RB2·ARRAY_NREF
+ARRAY_NREF    -> TKN_LB2·EXPR·TKN_RB2·ARRAY_NREF |$
+DEF_STMT      -> DEF·TKN_SEMI
+DEF           -> TYPE·DTERM·DTLIST
+DTERM         -> IDENTIFIER·ARRAY_DECL
+ARRAY_DECL    -> TKN_LB2·TKN_CONSTI·TKN_RB2·ARRAY_NDEM | $
+ARRAY_NDEM    -> TKN_LB2·TKN_CONSTI·TKN_RB2·ARRAY_NDEM | $
+DTLIST        -> TKN_COMMA·DTERM·DTLIST | $
+IF_STMT       -> TKN_IF·TKN_LP·EXPR·TKN_RP·CODE_BLOAK·ELSE_STMT
+CODE_BLOAK    -> STMT | FUNC_BODY
+ELSE_STMT     -> TKN_ELSE·CODE_BLOAK | $
+WHILE_STMT    -> TKN_WHILE·TKN_LP·EXPR·TKN_RP·WHILE_BODY
+WHILE_BODY    -> EXPR_STMT | TKN_LB·WHILE_BLOAK·TKN_RB
+WHILE_BLOAK   -> STMTS·BRE_CONTI·WHILE_BLOAK | $
+CONST         -> TKN_CONSTF | TKN_CONSTI
+TYPE          -> TKN_INT | TKN_FLOAT
+OPTP1         -> TKN_ASIGN
+OPTP2         -> TKN_EQU | TKN_NEQU | TKN_G | TKN_L | TKN_GE | TKN_LE		
+OPTP3		  -> TKN_ADD | TKN_SUB
+OPTP4         -> TKN_MUL | TKN_DIV
+BRE_CONTI     -> TKN_BREAK·TKN_SEMI | TKN_CONTINUE·TKN_SEMI | $
+
+(3)LL(1) analyze
+The number is the productions sequence number
+When ambiguous production occurs,chose one to make it ll(1) grammer
+The ll(1) analyze may not solve the problem of expression's priority
+
+the ambiguous:
+
+//WHILE_BLOAK -> STMTS·BRE_CONTI·WHILE_BLOAK | $
+<WHILE_BLOAK,}>= 0 1        //1
+
+//BRE_CONTI -> TKN_BREAK·TKN_SEMI | TKN_CONTINUE·TKN_SEMI | $
+<BRE_CONTI,break>= 0 2		//0
+<BRE_CONTI,continue>= 1 2	//1
+
+3.semantic 
+using recursive decendence
+
+struct ARGNODE
+{
+	std::string name;
+	union
+	{
+		int index;
+		float varf;
+		int vari;
+	};
+	int type;
+	std::vector<int> arr;//the array position coordinate or function args (the number of the temp var)
+	ARGNODE()
+	{
+		type=TYPE_EMPTY;
+	}
+	static const int TYPE_INT=TERMSET::TKN_INT;
+	static const int TYPE_FLOAT=TERMSET::TKN_FLOAT;
+	static const int TYPE_ARRAY=NTERMSET::ARRAY_REF;
+	static const int TYPE_TMP=NTERMSET::EXPR;
+	static const int TYPE_VAR=TERMSET::TKN_ID;
+	static const int TYPE_FUNC=NTERMSET::FUNCTION;
+	static const int TYPE_EMPTY=TERMSET::TKN_EMPTY;
+};
+struct SYMBOLNODE
+{
+	int type;
+	std::string name;
+	std::vector<int> dims;//demention size;if null mains virables else mains arrays
+	SYMBOLNODE(){}
+	SYMBOLNODE(int type,std::string name)
+	{
+		this->type=type;
+		this->name=name;
+	}
+};
+struct QUATERNION
+{
+	int op;
+	struct ARGNODE arg1;
+	struct ARGNODE arg2;
+	struct ARGNODE result;
+	int addr;
+};
+struct FUNCIC//function intermediate code
+{
+	std::string func_name;
+	int ret_type;
+	std::vector<struct SYMBOLNODE> args;
+	std::vector<struct SYMBOLNODE> vars;
+	std::vector<struct QUATERNION> quats;//quaternions
+	
+	//intermediate values
+	int tmp_num;//temp var number
+	struct ARGNODE last_result;
+	FUNCIC()
+	{
+		tmp_num=0;
+	}
+};
+
+examples:
+(T mains temp,L mains lable)
+<quat addr="24">
+	<op>+</op>
+	<arg1 type="identifier">a</arg1>
+	<arg2 type="const_i">1</arg2>
+	<result type="EXPR">T0</result>
+</quat>
+
+<quat addr="23">
+	<op>jne</op>
+	<arg1 type="EXPR">T1</arg1>
+	<arg2 type="lable">L2</arg2>
+	<result type="$" />
+</quat>
+
+<quat addr="26">
+	<op>jmp</op>
+	<arg1 type="$" />
+	<arg2 type="lable">L2</arg2>
+	<result type="$" />
+</quat>
+
+<quat addr="28">
+	<op>lable</op>
+	<arg1 type="$" />
+	<arg2 type="$" />
+	<result type="lable">L3</result>
+</quat>
+
+<quat addr="11">
+	<op>ARRAY_REF</op>
+	<arg1 type="ARRAY_REF">f2[T1][T2]</arg1>
+	<arg2 type="EXPR">T1</arg2>
+	<result type="$" />
+</quat>
+
+<quat addr="12">
+	<op>FUNCTION</op>
+	<arg1 type="FUNCTION">main(T0,T1)</arg1>
+	<arg2 type="$" />
+	<result type="EXPR">T0</result>
+</quat>

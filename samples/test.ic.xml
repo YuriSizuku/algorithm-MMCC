@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<IC name="..\..\debug\test.ic.xml">
+    <functions>
+        <function name="main" ret_type="int">
+            <args size="2">
+                <arg type="int" name="arg1" />
+                <arg type="float" name="arg2" />
+            </args>
+            <vars size="2">
+                <var type="int" name="a" />
+                <var type="int" name="b" />
+                <var type="int" name="c" />
+                <var type="float" name="f1" />
+                <var type="float" name="f2" dims="[3][3]" />
+            </vars>
+            <quats size="41">
+                <quat addr="0">
+                    <op>=</op>
+                    <arg1 type="identifier">a</arg1>
+                    <arg2 type="const_i">1</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="1">
+                    <op>=</op>
+                    <arg1 type="identifier">b</arg1>
+                    <arg2 type="identifier">a</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="2">
+                    <op>*</op>
+                    <arg1 type="identifier">a</arg1>
+                    <arg2 type="identifier">b</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="3">
+                    <op>+</op>
+                    <arg1 type="identifier">a</arg1>
+                    <arg2 type="EXPR">T0</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="4">
+                    <op>/</op>
+                    <arg1 type="identifier">a</arg1>
+                    <arg2 type="identifier">b</arg2>
+                    <result type="EXPR">T1</result>
+                </quat>
+                <quat addr="5">
+                    <op>*</op>
+                    <arg1 type="EXPR">T1</arg1>
+                    <arg2 type="identifier">a</arg2>
+                    <result type="EXPR">T1</result>
+                </quat>
+                <quat addr="6">
+                    <op>+</op>
+                    <arg1 type="EXPR">T0</arg1>
+                    <arg2 type="EXPR">T1</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="7">
+                    <op>=</op>
+                    <arg1 type="identifier">c</arg1>
+                    <arg2 type="EXPR">T0</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="8">
+                    <op>=</op>
+                    <arg1 type="identifier">b</arg1>
+                    <arg2 type="$" />
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="9">
+                    <op>=</op>
+                    <arg1 type="const_i">2</arg1>
+                    <arg2 type="EXPR">T1</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="10">
+                    <op>=</op>
+                    <arg1 type="const_i">1</arg1>
+                    <arg2 type="EXPR">T2</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="11">
+                    <op>ARRAY_REF</op>
+                    <arg1 type="ARRAY_REF">f2[T1][T2]</arg1>
+                    <arg2 type="EXPR">T1</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="12">
+                    <op>FUNCTION</op>
+                    <arg1 type="FUNCTION">main(T0,T1)</arg1>
+                    <arg2 type="$" />
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="13">
+                    <op>=</op>
+                    <arg1 type="identifier">a</arg1>
+                    <arg2 type="EXPR">T0</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="14">
+                    <op>&gt;=</op>
+                    <arg1 type="identifier">a</arg1>
+                    <arg2 type="identifier">b</arg2>
+                    <result type="EXPR">T1</result>
+                </quat>
+                <quat addr="15">
+                    <op>jne</op>
+                    <arg1 type="EXPR">T1</arg1>
+                    <arg2 type="lable">L4</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="16">
+                    <op>&gt;=</op>
+                    <arg1 type="identifier">c</arg1>
+                    <arg2 type="identifier">a</arg2>
+                    <result type="EXPR">T2</result>
+                </quat>
+                <quat addr="17">
+                    <op>jne</op>
+                    <arg1 type="EXPR">T2</arg1>
+                    <arg2 type="lable">L0</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="18">
+                    <op>=</op>
+                    <arg1 type="identifier">c</arg1>
+                    <arg2 type="identifier">a</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="19">
+                    <op>jmp</op>
+                    <arg1 type="$" />
+                    <arg2 type="lable">L3</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="20">
+                    <op>lable</op>
+                    <arg1 type="$" />
+                    <arg2 type="$" />
+                    <result type="lable">L0</result>
+                </quat>
+                <quat addr="21">
+                    <op>lable</op>
+                    <arg1 type="$" />
+                    <arg2 type="$" />
+                    <result type="lable">L1</result>
+                </quat>
+                <quat addr="22">
+                    <op>&lt;=</op>
+                    <arg1 type="identifier">a</arg1>
+                    <arg2 type="identifier">b</arg2>
+                    <result type="EXPR">T1</result>
+                </quat>
+                <quat addr="23">
+                    <op>jne</op>
+                    <arg1 type="EXPR">T1</arg1>
+                    <arg2 type="lable">L2</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="24">
+                    <op>+</op>
+                    <arg1 type="identifier">a</arg1>
+                    <arg2 type="const_i">1</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="25">
+                    <op>=</op>
+                    <arg1 type="identifier">a</arg1>
+                    <arg2 type="EXPR">T0</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="26">
+                    <op>jmp</op>
+                    <arg1 type="$" />
+                    <arg2 type="lable">L2</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="27">
+                    <op>lable</op>
+                    <arg1 type="$" />
+                    <arg2 type="$" />
+                    <result type="lable">L2</result>
+                </quat>
+                <quat addr="28">
+                    <op>lable</op>
+                    <arg1 type="$" />
+                    <arg2 type="$" />
+                    <result type="lable">L3</result>
+                </quat>
+                <quat addr="29">
+                    <op>return</op>
+                    <arg1 type="$" />
+                    <arg2 type="$" />
+                    <result type="const_i">3</result>
+                </quat>
+                <quat addr="30">
+                    <op>lable</op>
+                    <arg1 type="$" />
+                    <arg2 type="$" />
+                    <result type="lable">L4</result>
+                </quat>
+                <quat addr="31">
+                    <op>=</op>
+                    <arg1 type="const_i">2</arg1>
+                    <arg2 type="EXPR">T0</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="32">
+                    <op>=</op>
+                    <arg1 type="const_i">2</arg1>
+                    <arg2 type="EXPR">T1</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="33">
+                    <op>ARRAY_REF</op>
+                    <arg1 type="ARRAY_REF">f2[T0][T1]</arg1>
+                    <arg2 type="EXPR">T0</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="34">
+                    <op>=</op>
+                    <arg1 type="EXPR">T0</arg1>
+                    <arg2 type="const_f">3.2</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="35">
+                    <op>=</op>
+                    <arg1 type="const_i">2</arg1>
+                    <arg2 type="EXPR">T0</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="36">
+                    <op>=</op>
+                    <arg1 type="const_i">2</arg1>
+                    <arg2 type="EXPR">T1</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="37">
+                    <op>ARRAY_REF</op>
+                    <arg1 type="ARRAY_REF">f2[T0][T1]</arg1>
+                    <arg2 type="EXPR">T0</arg2>
+                    <result type="$" />
+                </quat>
+                <quat addr="38">
+                    <op>+</op>
+                    <arg1 type="EXPR">T0</arg1>
+                    <arg2 type="const_f">3.4</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="39">
+                    <op>=</op>
+                    <arg1 type="identifier">f1</arg1>
+                    <arg2 type="EXPR">T0</arg2>
+                    <result type="EXPR">T0</result>
+                </quat>
+                <quat addr="40">
+                    <op>return</op>
+                    <arg1 type="$" />
+                    <arg2 type="$" />
+                    <result type="const_i">0</result>
+                </quat>
+            </quats>
+        </function>
+    </functions>
+</IC>
