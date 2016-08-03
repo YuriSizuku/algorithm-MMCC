@@ -7,6 +7,7 @@ The subset c have such features before:
 
 Now I realize the scanning,parsing,semetic analyze and intermediate code generate.
 
+The input and output relies on tinyxml.
 
 1.words
 (The "%%" mains don't consider now,others undefined)
