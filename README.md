@@ -12,14 +12,14 @@ A mini make c compiler including
 to compile a programe wrote by a subset of c language
 
 ### code structures
-algutil.h            basic algrithms, including string processing, obtaining first, follow set
-base.h               declearation for all data struct, hash table
-ioutil.h             basic input or output, xml read and write
-mmcc.cpp             main project
-pp.cpp               preprocessing, fitter comment
-scanning.cpp         output .token.xml
-parsing.cpp          output .tree.xml 
-semantic.cpp         output .ic.xml
+* algutil.h            basic algrithms, including string processing, obtaining first, follow set
+* base.h               declearation for all data struct, hash table
+* ioutil.h             basic input or output, xml read and write
+* mmcc.cpp             main project
+* pp.cpp               preprocessing, fitter comment
+* scanning.cpp         output .token.xml
+* parsing.cpp          output .tree.xml 
+* semantic.cpp         output .ic.xml
 
 ### details
 * The compiler's architecture detailed methods are in 
